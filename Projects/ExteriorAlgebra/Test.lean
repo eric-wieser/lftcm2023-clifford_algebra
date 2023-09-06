@@ -54,6 +54,7 @@ set_option pp.proofs.withType false
 def mul_helper : Model.Index ι → Model.Index ι → Model.Index ι × SignType :=
   sorry
 
+@[simp]
 lemma single_mul_single_helper (i : ι) :
   (mul_helper (Model.Index.single i) (Model.Index.single i)).2 = 0 := by
   sorry
@@ -82,7 +83,6 @@ lemma single_mul_single (i : ι) : Model.single R i * Model.single R i = 0 := by
   change Finsupp.sum _ _ = _
   dsimp only [mul,Model.single]
   simp
-  sorry
 
 #check Finsupp.sum_single_index
 
@@ -142,4 +142,3 @@ def lift :
       invFun := liftInvFun
       left_inv := sorry
       right_inv := sorry
-
