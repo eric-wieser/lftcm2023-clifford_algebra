@@ -1,6 +1,7 @@
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
+import Mathlib.Data.Sign
 
 noncomputable section
 
@@ -9,7 +10,11 @@ variable (R) [CommRing R] (n : ℕ)
 variable  (ι : Type) [LinearOrder ι]
 
 -- a list of indices, sorted
-def Model := {l : List ι // l.Sorted (· < ·) }  →₀ R
+abbrev Model.Index := {l : List ι // l.Sorted (· < ·) }
+
+def Model := Model.Index ι →₀ R
+
+
 
 instance : AddCommGroup (Model R ι) := by
   unfold Model
@@ -43,6 +48,9 @@ set_option pp.proofs.withType false
 
 #check Model.single ℤ (1 : Fin 3) + (3:ℤ) • Model.single ℤ (2 : Fin 3)
 
+
+def mul_helper : Model.Index ι → Model.Index ι → Model.Index ι × SignType :=
+  sorry
 
 instance : Mul (Model R ι) where
   -- multiply pairwise
