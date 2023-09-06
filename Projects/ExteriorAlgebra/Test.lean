@@ -21,11 +21,12 @@ instance : Module R (Model R ι) := by
   unfold Model
   infer_instance
 
-def ModelOfFinsupp : ( Model.Index ι →₀ R) ≃ₗ[R] Model R ι :=
+variable {R ι} in
+def Model.ofFinsupp : ( Model.Index ι →₀ R) ≃ₗ[R] Model R ι :=
   LinearEquiv.refl _ _
 
 instance : One (Model R ι) where
-  one := Finsupp.single ⟨[], by simp⟩ 1
+  one := Model.ofFinsupp <| Finsupp.single ⟨[], by simp⟩ 1
 
   /-
   # todos
@@ -39,7 +40,7 @@ instance : One (Model R ι) where
 
 variable { ι }
 def Model.single ( i : ι ) : Model R ι :=
-  Finsupp.single {
+  Model.ofFinsupp <| Finsupp.single {
     val := [i]
     property := by
       simp
@@ -53,24 +54,34 @@ set_option pp.proofs.withType false
 def mul_helper : Model.Index ι → Model.Index ι → Model.Index ι × SignType :=
   sorry
 
-lemma single_mul_single_helper (i : ι) :
-  (mul_helper ⟨[i], by simp⟩ ⟨[i], by simp⟩).2 = 0 := by
-  sorry
 
 -- def list_sort_concat
 open scoped BigOperators
 
+variable {R}
+def mul (v w : Model R ι) : Model R ι :=
+  (Model.ofFinsupp.symm v).sum fun i vi ↦
+    (Model.ofFinsupp.symm w).sum fun j wj ↦
+      let ⟨k,s⟩:=mul_helper i j
+      Model.ofFinsupp <| Finsupp.single k (s * vi * wj)
+
 instance : Mul (Model R ι) where
   -- multiply pairwise
   mul v w :=
-    v.sum fun i vi ↦
-      w.sum fun j wj ↦
-        let ⟨k,s⟩:=mul_helper i j
-        Finsupp.single k (s * vi * wj)
+  (Model.ofFinsupp.symm v).sum fun i vi ↦
+    (Model.ofFinsupp.symm w).sum fun j wj ↦
+      let ⟨k,s⟩:=mul_helper i j
+      Model.ofFinsupp <| Finsupp.single k (s * vi * wj)
+
+#print instMulModel
 
 lemma single_mul_single (i : ι) : Model.single R i * Model.single R i = 0 := by
-  unfold Model.single instMulModel instHMul
-  dsimp only
+  change Finsupp.sum _ _ = _
+  dsimp only [mul,Model.single]
+  simp
+  sorry
+
+#check Finsupp.sum_single_index
 
 
 instance : Ring (Model R ι) where
@@ -100,3 +111,4 @@ instance : Algebra R (Model R ι) where
 variable { A : Type } [Ring A] [Algebra R A]
 variable { M : Type } [AddCommGroup M] [Module R M]
 def lift : { f : (ι →₀ R) →ₗ[R] A // ∀ m, f m * f m = 0 } ≃ (Model R ι →ₐ[R] A) := sorry
+
