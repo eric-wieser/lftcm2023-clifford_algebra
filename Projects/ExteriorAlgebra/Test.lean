@@ -8,12 +8,6 @@ noncomputable section
 variable (R) [CommRing R] (n : ℕ)
 variable  (ι : Type) [LinearOrder ι]
 
-def model1 := Finset (Fin n) → R
-
-
-def model2 := Finset ι →₀ R
-
-
 -- a list of indices, sorted
 def Model := {l : List ι // l.Sorted (· < ·) }  →₀ R
 
@@ -49,9 +43,12 @@ set_option pp.proofs.withType false
 
 #check Model.single ℤ (1 : Fin 3) + (3:ℤ) • Model.single ℤ (2 : Fin 3)
 
+
 instance : Mul (Model R ι) where
   -- multiply pairwise
   mul v w := sorry
+
+lemma single_mul_single (i : ι) : Model.single R i * Model.single R i = 0 := sorry
 
 instance : Ring (Model R ι) where
   -- inheritance in lean 4 is (somewhat) broken currently
@@ -75,3 +72,8 @@ instance : Algebra R (Model R ι) where
   map_add' x y := sorry
   commutes' r x := sorry
   smul_def' r x := sorry
+
+-- @[simps! symm_apply]
+variable { A : Type } [Ring A] [Algebra R A]
+variable { M : Type } [AddCommGroup M] [Module R M]
+def lift : { f : (ι →₀ R) →ₗ[R] A // ∀ m, f m * f m = 0 } ≃ (Model R ι →ₐ[R] A) := sorry
