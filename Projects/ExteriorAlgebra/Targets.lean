@@ -10,29 +10,29 @@ open FiniteDimensional (finrank)
 open Module (rank)
 
 universe uι uR uM
-variable {ι : Type uι} {R : Type uR} {M : Type uM}
+variable {ι : Type} [LinearOrder ι] {R : Type} {M : Type}
 variable [CommRing R] [AddCommGroup M] [Module R M]
 
 /-- Given a basis, we can consider our exterior algebra in terms of our model. The `sorry` here
 should be the model we choose. -/
-def ExteriorAlgebra.equivModel (b : Basis ι R M) : ExteriorAlgebra R M ≃ₐ[R] sorry :=
+def ExteriorAlgebra.equivModel (b : Basis ι R M) : ExteriorAlgebra R M ≃ₐ[R] ( Model R ι ):=
   sorry
 
 /-- When applied to a single basis vector, the result is a single element of the model.
 The first `sorry` here should be the `single` function of the basis. -/
 theorem ExteriorAlgebra.equivModel_ι_basis (b : Basis ι R M) (i : ι) :
-    ExteriorAlgebra.equivModel b (ExteriorAlgebra.ι R (b i)) = sorry i :=
+    ExteriorAlgebra.equivModel b (ExteriorAlgebra.ι R (b i)) = Model.single R i :=
   sorry
 
 
 /-- When applied to a single element of the model, the result is a single basis vector.
 The first `sorry` here should be the `single` function of the basis. -/
-theorem ExteriorAlgebra.equivModel_ι_basis (b : Basis ι R M) (i : ι) :
-    (ExteriorAlgebra.equivModel b).symm (sorry i) = ExteriorAlgebra.ι R (b i) :=
+theorem ExteriorAlgebra.equivModel_symm_single (b : Basis ι R M) (i : ι) :
+    (ExteriorAlgebra.equivModel b).symm (Model.single R i) = ExteriorAlgebra.ι R (b i) :=
   sorry
 
 /-- Given a basis on the module, produce a basis on the free algebra -/
-def Basis.exteriorAlgebra (b : Basis ι R M) : Basis sorry R (ExteriorAlgebra R M) :=
+def Basis.exteriorAlgebra (b : Basis ι R M) : Basis {l : List ι // l.Sorted (· < ·) } R (ExteriorAlgebra R M) :=
   sorry
 
 #check TensorAlgebra.instModuleFree -- should help with

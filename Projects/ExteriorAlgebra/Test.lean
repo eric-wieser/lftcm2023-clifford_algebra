@@ -38,7 +38,7 @@ instance : One (Model R ι) where
   -/
 
 variable { ι }
-def single ( i : ι ) : Model R ι :=
+def Model.single ( i : ι ) : Model R ι :=
   Finsupp.single {
     val := [i]
     property := by
@@ -47,7 +47,7 @@ def single ( i : ι ) : Model R ι :=
 
 set_option pp.proofs.withType false
 
-#check single ℤ (1 : Fin 3) + (3:ℤ) • single ℤ (2 : Fin 3)
+#check Model.single ℤ (1 : Fin 3) + (3:ℤ) • Model.single ℤ (2 : Fin 3)
 
 instance : Mul (Model R ι) where
   -- multiply pairwise
