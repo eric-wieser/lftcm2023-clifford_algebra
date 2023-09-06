@@ -14,60 +14,64 @@ def model1 := Finset (Fin n) → R
 def model2 := Finset ι →₀ R
 
 
-def model3 := {l : List ι // l.Sorted (· < ·) }  →₀ R
+-- a list of indices, sorted
+def Model := {l : List ι // l.Sorted (· < ·) }  →₀ R
 
-instance : AddCommGroup (model3 R ι) := by
-  unfold model3
+instance : AddCommGroup (Model R ι) := by
+  unfold Model
   infer_instance
-instance : Module R (model3 R ι) := by
-  unfold model3
+instance : Module R (Model R ι) := by
+  unfold Model
   infer_instance
 
-instance : One (model3 R ι) where
+instance : One (Model R ι) where
   one := Finsupp.single ⟨[], by simp⟩ 1
 
   /-
   # todos
   define multiplication, prove associativity
 
-  instance : Ring (model3 R ι)
-  instance : Algebra R (model3 R ι)
+  instance : Ring (Model R ι)
+  instance : Algebra R (Model R ι)
 
   square single should give quadratic form
   -/
 
 variable { ι }
-def single ( i : ι ) : model3 R ι :=
+def single ( i : ι ) : Model R ι :=
   Finsupp.single {
     val := [i]
     property := by
       simp
   } 1
 
+set_option pp.proofs.withType false
 
 #check single ℤ (1 : Fin 3) + (3:ℤ) • single ℤ (2 : Fin 3)
 
-instance : NatCast (model3 R ι) where
-  natCast n := n • (1: model3 R ι)
+instance : Mul (Model R ι) where
+  -- multiply pairwise
+  mul v w := sorry
 
-#check ( 3 : model3 ℤ (Fin 3) )
-
-instance : Ring (model3 R ι) where
+instance : Ring (Model R ι) where
   -- inheritance in lean 4 is (somewhat) broken currently
-  __ := inferInstanceAs (AddCommGroup (model3 R ι))
+  __ := inferInstanceAs (AddCommGroup (Model R ι))
 
-  mul := sorry
   left_distrib := sorry
   right_distrib := sorry
 
   zero_mul := sorry
   mul_zero := sorry
   mul_assoc := sorry
-  one := sorry
   one_mul := sorry
   mul_one := sorry
-  natCast_zero := sorry
-  natCast_succ := sorry
-  npow := sorry
-  npow_zero := sorry
-  npow_succ := sorry
+
+instance : Algebra R (Model R ι) where
+  toFun := Finsupp.single ⟨[], by simp⟩
+  map_one' := rfl
+  map_mul' := sorry
+  -- we came up with this by using `by simp`
+  map_zero' := Finsupp.single_zero _
+  map_add' x y := sorry
+  commutes' r x := sorry
+  smul_def' r x := sorry
