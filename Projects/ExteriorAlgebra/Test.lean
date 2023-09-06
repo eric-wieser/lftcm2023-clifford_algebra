@@ -96,7 +96,45 @@ instance : Algebra R (Model R ι) where
   commutes' r x := sorry
   smul_def' r x := sorry
 
+variable {R}
+variable {A : Type} [Ring A] [Algebra R A]
+variable {M : Type} [AddCommGroup M] [Module R M]
+
+def liftToFun ( f : (ι →₀ R) →ₗ[R] A ) ( hf : ∀ m, f m * f m = 0 ) : (Model R ι →ₐ[R] A) where
+  toFun m := m.sum $ λ ⟨i, _⟩ r => (List.prod (List.map f (i.map (λ _ => 0))))
+  -- toFun m := m.sum fun ⟨i, _⟩ r => r • (List.prod (List.map f (List.map (λ _ => 0) i)))
+
+  -- toFun m := m.sum
+  --   λ ⟨basis_elem, _⟩ scaler =>
+  --     (List.prod
+  --       (List.map f (List.map (λ _ => _) basis_elem)))
+
+      -- ((List.map f (List.map (λ v => {
+      --   support := v
+      --   toFun := λ _ => scaler
+      --   mem_support_toFun := by
+      --     simp
+      --     intro h
+      --     constructor
+      --     . sorry
+      --     . sorry
+      -- }) basis_elem)).prod)
+  -- toFun m := m.sum fun ⟨basis_elem, _⟩ r => (List.prod (List.map f _))
+  map_one' := sorry
+  map_mul' := sorry
+  map_zero' := sorry
+  map_add' := sorry
+  commutes' := sorry
+
+
+def liftInvFun : (Model R ι →ₐ[R] A) → { f : (ι →₀ R) →ₗ[R] A // ∀ m, f m * f m = 0 } := sorry
+
 -- @[simps! symm_apply]
-variable { A : Type } [Ring A] [Algebra R A]
-variable { M : Type } [AddCommGroup M] [Module R M]
-def lift : { f : (ι →₀ R) →ₗ[R] A // ∀ m, f m * f m = 0 } ≃ (Model R ι →ₐ[R] A) := sorry
+def lift :
+    { f : (ι →₀ R) →ₗ[R] A // ∀ m, f m * f m = 0 }
+    ≃ (Model R ι →ₐ[R] A)
+    where
+      toFun := liftToFun
+      invFun := liftInvFun
+      left_inv := sorry
+      right_inv := sorry
