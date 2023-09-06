@@ -52,9 +52,15 @@ set_option pp.proofs.withType false
 def mul_helper : Model.Index ι → Model.Index ι → Model.Index ι × SignType :=
   sorry
 
+-- def list_sort_concat
+open scoped BigOperators
+
 instance : Mul (Model R ι) where
   -- multiply pairwise
-  mul v w := sorry
+  mul v w :=
+    ∑ i in v.support, ∑ j in w.support,
+      let ⟨k,s⟩:=mul_helper i j
+      Finsupp.single k (s * v.toFun i * w.toFun j)
 
 lemma single_mul_single (i : ι) : Model.single R i * Model.single R i = 0 := sorry
 
