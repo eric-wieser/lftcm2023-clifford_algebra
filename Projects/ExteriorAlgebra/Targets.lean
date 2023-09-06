@@ -6,6 +6,8 @@ This files contains the "main" targets of this project.
 Any of these results would be great!
 -/
 
+noncomputable section
+
 open FiniteDimensional (finrank)
 open Module (rank)
 
@@ -13,11 +15,41 @@ universe uι uR uM
 variable {ι : Type} [LinearOrder ι] {R : Type} {M : Type}
 variable [CommRing R] [AddCommGroup M] [Module R M]
 
+noncomputable def model_of_free_vsp : (ι →₀ R) →ₗ[R] Model R ι :=
+  Finsupp.lmapDomain R R (fun i ↦ Model.Index.single i)
+
+lemma two_vectors_square_zero (m: ι →₀ R) :
+  model_of_free_vsp m * model_of_free_vsp m = 0 := by
+  sorry
+
+set_option pp.proofs.withType false
+
 /-- Given a basis, we can consider our exterior algebra in terms of our model. The `sorry` here
 should be the model we choose. -/
-def ExteriorAlgebra.equivModel (b : Basis ι R M) :
-    ExteriorAlgebra R M ≃ₐ[R] ( Model R ι ):=
-  sorry
+def ExteriorAlgebra.equivModel : ExteriorAlgebra R (ι →₀ R) ≃ₐ[R] ( Model R ι ) :=
+  AlgEquiv.ofAlgHom
+  (ExteriorAlgebra.lift _ ⟨model_of_free_vsp , two_vectors_square_zero⟩)
+  (liftToFun (ExteriorAlgebra.ι _) ι_sq_zero)
+  (by
+    ext
+    dsimp
+    sorry
+  )
+  (by
+    ext
+    dsimp
+    sorry
+  )
+
+set_option maxHeartbeats 400000 in
+nonrec def Basis.ExteriorAlgebra.equivModel (b : Basis ι R M) : ExteriorAlgebra R M ≃ₐ[R] ( Model R ι ):=
+  let e := ExteriorAlgebra.equivModel (R := R) (ι := ι)
+  AlgEquiv.trans (CliffordAlgebra.equivOfIsometry {
+    toLinearEquiv := b.repr
+    map_app' := by
+      intro m
+      rfl
+  }) e
 
 /-- When applied to a single basis vector, the result is a single element of the model.
 The first `sorry` here should be the `single` function of the basis. -/
