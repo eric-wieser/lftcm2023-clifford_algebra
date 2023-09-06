@@ -39,12 +39,12 @@ instance : One (Model R ι) where
   -/
 
 variable { ι }
+
+@[simps]
+def Model.Index.single (i : ι) : Model.Index ι := ⟨[i], by simp⟩
+
 def Model.single ( i : ι ) : Model R ι :=
-  Model.ofFinsupp <| Finsupp.single {
-    val := [i]
-    property := by
-      simp
-  } 1
+  Model.ofFinsupp <| Finsupp.single (Model.Index.single i) 1
 
 set_option pp.proofs.withType false
 
@@ -55,7 +55,7 @@ def mul_helper : Model.Index ι → Model.Index ι → Model.Index ι × SignTyp
   sorry
 
 lemma single_mul_single_helper (i : ι) :
-  (mul_helper ⟨[i], by simp⟩ ⟨[i], by simp⟩).2 = 0 := by
+  (mul_helper (Model.Index.single i) (Model.Index.single i)).2 = 0 := by
   sorry
 
 -- def list_sort_concat
