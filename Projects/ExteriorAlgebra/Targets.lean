@@ -15,7 +15,8 @@ variable [CommRing R] [AddCommGroup M] [Module R M]
 
 /-- Given a basis, we can consider our exterior algebra in terms of our model. The `sorry` here
 should be the model we choose. -/
-def ExteriorAlgebra.equivModel (b : Basis ι R M) : ExteriorAlgebra R M ≃ₐ[R] ( Model R ι ):=
+def ExteriorAlgebra.equivModel (b : Basis ι R M) :
+    ExteriorAlgebra R M ≃ₐ[R] ( Model R ι ):=
   sorry
 
 /-- When applied to a single basis vector, the result is a single element of the model.
@@ -32,8 +33,12 @@ theorem ExteriorAlgebra.equivModel_symm_single (b : Basis ι R M) (i : ι) :
   sorry
 
 /-- Given a basis on the module, produce a basis on the free algebra -/
-def Basis.exteriorAlgebra (b : Basis ι R M) : Basis {l : List ι // l.Sorted (· < ·) } R (ExteriorAlgebra R M) :=
-  sorry
+def Basis.exteriorAlgebra (b : Basis ι R M) :
+    Basis (Model.Index ι) R (ExteriorAlgebra R M) :=
+  Basis.ofRepr <|
+    let e := ExteriorAlgebra.equivModel b
+    let e' : ExteriorAlgebra R M ≃ₗ[R] Model R ι := by exact AlgEquiv.toLinearEquiv e
+    e' ≪≫ₗ (by exact Model.ofFinsupp)
 
 #check TensorAlgebra.instModuleFree -- should help with
 /-- An exterior algebra over a free module is itself a free module -/
