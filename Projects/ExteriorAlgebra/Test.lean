@@ -14,14 +14,15 @@ abbrev Model.Index := {l : List ι // l.Sorted (· < ·) }
 
 def Model := Model.Index ι →₀ R
 
-
-
 instance : AddCommGroup (Model R ι) := by
   unfold Model
   infer_instance
 instance : Module R (Model R ι) := by
   unfold Model
   infer_instance
+
+def ModelOfFinsupp : ( Model.Index ι →₀ R) ≃ₗ[R] Model R ι :=
+  LinearEquiv.refl _ _
 
 instance : One (Model R ι) where
   one := Finsupp.single ⟨[], by simp⟩ 1
@@ -58,11 +59,15 @@ open scoped BigOperators
 instance : Mul (Model R ι) where
   -- multiply pairwise
   mul v w :=
-    ∑ i in v.support, ∑ j in w.support,
-      let ⟨k,s⟩:=mul_helper i j
-      Finsupp.single k (s * v.toFun i * w.toFun j)
+    v.sum fun i vi ↦
+      w.sum fun j wj ↦
+        let ⟨k,s⟩:=mul_helper i j
+        Finsupp.single k (s * vi * wj)
 
-lemma single_mul_single (i : ι) : Model.single R i * Model.single R i = 0 := sorry
+lemma single_mul_single (i : ι) : Model.single R i * Model.single R i = 0 := by
+  unfold Model.single instMulModel instHMul
+  dsimp only
+
 
 instance : Ring (Model R ι) where
   -- inheritance in lean 4 is (somewhat) broken currently
