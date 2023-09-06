@@ -110,7 +110,7 @@ instance : Algebra R (Model R ι) where
   commutes' r x := sorry
   smul_def' r x := sorry
 
-variable {R}
+-- variable {R}
 variable {A : Type} [Ring A] [Algebra R A]
 variable {M : Type} [AddCommGroup M] [Module R M]
 
@@ -138,7 +138,7 @@ def lift :
     { f : (ι →₀ R) →ₗ[R] A // ∀ m, f m * f m = 0 }
     ≃ (Model R ι →ₐ[R] A)
     where
-      toFun := liftToFun
+      toFun := sorry
       invFun := liftInvFun
       left_inv := sorry
       right_inv := sorry
