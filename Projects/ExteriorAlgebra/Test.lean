@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
+import Mathlib.Data.Real.Basic
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 
 noncomputable section
@@ -35,9 +36,38 @@ instance : One (model3 R ι) where
   square single should give quadratic form
   -/
 
-def single : ι → model3 R ι :=
-  fun i ↦ Finsupp.single {
+variable { ι }
+def single ( i : ι ) : model3 R ι :=
+  Finsupp.single {
     val := [i]
     property := by
       simp
   } 1
+
+
+#check single ℤ (1 : Fin 3) + (3:ℤ) • single ℤ (2 : Fin 3)
+
+instance : NatCast (model3 R ι) where
+  natCast n := n • (1: model3 R ι)
+
+#check ( 3 : model3 ℤ (Fin 3) )
+
+instance : Ring (model3 R ι) where
+  -- inheritance in lean 4 is (somewhat) broken currently
+  __ := inferInstanceAs (AddCommGroup (model3 R ι))
+
+  mul := sorry
+  left_distrib := sorry
+  right_distrib := sorry
+
+  zero_mul := sorry
+  mul_zero := sorry
+  mul_assoc := sorry
+  one := sorry
+  one_mul := sorry
+  mul_one := sorry
+  natCast_zero := sorry
+  natCast_succ := sorry
+  npow := sorry
+  npow_zero := sorry
+  npow_succ := sorry
