@@ -115,25 +115,15 @@ variable {A : Type} [Ring A] [Algebra R A]
 variable {M : Type} [AddCommGroup M] [Module R M]
 
 def liftToFun ( f : (ι →₀ R) →ₗ[R] A ) ( hf : ∀ m, f m * f m = 0 ) : (Model R ι →ₐ[R] A) where
-  toFun m := m.sum $ λ ⟨i, _⟩ r => (List.prod (List.map f (i.map (λ _ => 0))))
-  -- toFun m := m.sum fun ⟨i, _⟩ r => r • (List.prod (List.map f (List.map (λ _ => 0) i)))
-
+  toFun m := m.sum $
+    λ ⟨i, _⟩ r =>
+    r • (
+      List.prod (
+        List.map (fun x => f (Finsupp.single x 1)) i) : A)
+  -- Alternative:
   -- toFun m := m.sum
   --   λ ⟨basis_elem, _⟩ scaler =>
-  --     (List.prod
-  --       (List.map f (List.map (λ _ => _) basis_elem)))
-
-      -- ((List.map f (List.map (λ v => {
-      --   support := v
-      --   toFun := λ _ => scaler
-      --   mem_support_toFun := by
-      --     simp
-      --     intro h
-      --     constructor
-      --     . sorry
-      --     . sorry
-      -- }) basis_elem)).prod)
-  -- toFun m := m.sum fun ⟨basis_elem, _⟩ r => (List.prod (List.map f _))
+  --     ((List.map f (List.map (λ v => by exact Finsupp.single v 1) basis_elem)).prod)
   map_one' := sorry
   map_mul' := sorry
   map_zero' := sorry
