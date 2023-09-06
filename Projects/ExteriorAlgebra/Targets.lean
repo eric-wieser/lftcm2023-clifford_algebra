@@ -2,7 +2,8 @@ import Projects.ExteriorAlgebra.Test
 import Mathlib.LinearAlgebra.TensorAlgebra.Basis
 
 /-!
-This files contains the "main" targets of these projects. Any of these results would be great!
+This files contains the "main" targets of this project.
+Any of these results would be great!
 -/
 
 open FiniteDimensional (finrank)
