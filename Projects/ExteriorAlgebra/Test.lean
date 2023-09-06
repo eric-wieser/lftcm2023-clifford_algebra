@@ -53,6 +53,10 @@ set_option pp.proofs.withType false
 def mul_helper : Model.Index ι → Model.Index ι → Model.Index ι × SignType :=
   sorry
 
+lemma single_mul_single_helper (i : ι) :
+  (mul_helper ⟨[i], by simp⟩ ⟨[i], by simp⟩).2 = 0 := by
+  sorry
+
 -- def list_sort_concat
 open scoped BigOperators
 
