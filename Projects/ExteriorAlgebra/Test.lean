@@ -28,6 +28,11 @@ def Model.ofFinsupp : ( Model.Index ι →₀ R) ≃ₗ[R] Model R ι :=
 instance : One (Model R ι) where
   one := Model.ofFinsupp <| Finsupp.single ⟨[], by simp⟩ 1
 
+@[simp]
+lemma Model.ofFinsupp_symm_one :
+    Model.ofFinsupp.symm (1: Model R ι) = Finsupp.single ⟨[], by simp⟩ 1 := by
+  rfl
+
   /-
   # todos
   define multiplication, prove associativity
@@ -115,7 +120,7 @@ variable {A : Type} [Ring A] [Algebra R A]
 variable {M : Type} [AddCommGroup M] [Module R M]
 
 def liftToFun ( f : (ι →₀ R) →ₗ[R] A ) ( hf : ∀ m, f m * f m = 0 ) : (Model R ι →ₐ[R] A) where
-  toFun m := m.sum $
+  toFun m := (Model.ofFinsupp.symm m).sum $
     λ ⟨i, _⟩ r =>
     r • (
       List.prod (
@@ -124,11 +129,14 @@ def liftToFun ( f : (ι →₀ R) →ₗ[R] A ) ( hf : ∀ m, f m * f m = 0 ) : 
   -- toFun m := m.sum
   --   λ ⟨basis_elem, _⟩ scaler =>
   --     ((List.map f (List.map (λ v => by exact Finsupp.single v 1) basis_elem)).prod)
-  map_one' := sorry
+  map_one' := by simp
   map_mul' := sorry
-  map_zero' := sorry
-  map_add' := sorry
-  commutes' := sorry
+  map_zero' := by simp
+  map_add' x y:= by
+    simp [Finsupp.sum_add_index, add_smul]
+  commutes' r := by
+    dsimp
+    sorry
 
 
 def liftInvFun : (Model R ι →ₐ[R] A) → { f : (ι →₀ R) →ₗ[R] A // ∀ m, f m * f m = 0 } := sorry
