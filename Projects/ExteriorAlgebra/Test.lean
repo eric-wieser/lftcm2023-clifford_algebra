@@ -28,6 +28,10 @@ def Model.ofFinsupp : ( Model.Index ι →₀ R) ≃ₗ[R] Model R ι :=
 instance : One (Model R ι) where
   one := Model.ofFinsupp <| Finsupp.single ⟨[], by simp⟩ 1
 
+-- (Finsupp.sum (↑(LinearEquiv.symm Model.ofFinsupp) 1) fun x r ↦
+--     r • List.prod (List.map (fun x ↦ ↑f (Finsupp.single x 1)) ↑x)) =
+--   1
+
 @[simp]
 lemma Model.ofFinsupp_symm_one :
     Model.ofFinsupp.symm (1: Model R ι) = Finsupp.single ⟨[], by simp⟩ 1 := by
@@ -44,12 +48,12 @@ lemma Model.ofFinsupp_symm_one :
   -/
 
 variable { ι }
-
-@[simps]
-def Model.Index.single (i : ι) : Model.Index ι := ⟨[i], by simp⟩
-
 def Model.single ( i : ι ) : Model R ι :=
-  Model.ofFinsupp <| Finsupp.single (Model.Index.single i) 1
+  Model.ofFinsupp <| Finsupp.single {
+    val := [i]
+    property := by
+      simp
+  } 1
 
 set_option pp.proofs.withType false
 
@@ -59,9 +63,8 @@ set_option pp.proofs.withType false
 def mul_helper : Model.Index ι → Model.Index ι → Model.Index ι × SignType :=
   sorry
 
-@[simp]
 lemma single_mul_single_helper (i : ι) :
-  (mul_helper (Model.Index.single i) (Model.Index.single i)).2 = 0 := by
+  (mul_helper ⟨[i], by simp⟩ ⟨[i], by simp⟩).2 = 0 := by
   sorry
 
 -- def list_sort_concat
@@ -88,6 +91,7 @@ lemma single_mul_single (i : ι) : Model.single R i * Model.single R i = 0 := by
   change Finsupp.sum _ _ = _
   dsimp only [mul,Model.single]
   simp
+  sorry
 
 #check Finsupp.sum_single_index
 
@@ -115,7 +119,13 @@ instance : Algebra R (Model R ι) where
   commutes' r x := sorry
   smul_def' r x := sorry
 
--- variable {R}
+variable {r: R}
+@[simp]
+lemma Model.ofFinsupp_symm_algebra_map :
+    Model.ofFinsupp.symm (algebraMap R (Model R ι) r) = Finsupp.single ⟨[], by simp⟩ r := by
+  rfl
+
+
 variable {A : Type} [Ring A] [Algebra R A]
 variable {M : Type} [AddCommGroup M] [Module R M]
 
@@ -135,18 +145,24 @@ def liftToFun ( f : (ι →₀ R) →ₗ[R] A ) ( hf : ∀ m, f m * f m = 0 ) : 
   map_add' x y:= by
     simp [Finsupp.sum_add_index, add_smul]
   commutes' r := by
-    dsimp
+    simp
+    rw [@Algebra.algebraMap_eq_smul_one]
+
+def liftInvFun (F : Model R ι →ₐ[R] A) : { f : (ι →₀ R) →ₗ[R] A // ∀ m, f m * f m = 0 } where
+  val := sorry
+  property := by
+    intro m
     sorry
 
-
-def liftInvFun : (Model R ι →ₐ[R] A) → { f : (ι →₀ R) →ₗ[R] A // ∀ m, f m * f m = 0 } := sorry
 
 -- @[simps! symm_apply]
 def lift :
     { f : (ι →₀ R) →ₗ[R] A // ∀ m, f m * f m = 0 }
     ≃ (Model R ι →ₐ[R] A)
     where
-      toFun := sorry
+      toFun := by
+        intro f
+        exact liftToFun f.val f.property
       invFun := liftInvFun
       left_inv := sorry
       right_inv := sorry
