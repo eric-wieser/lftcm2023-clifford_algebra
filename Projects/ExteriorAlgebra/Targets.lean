@@ -42,9 +42,11 @@ def Basis.exteriorAlgebra (b : Basis ι R M) :
 
 #check TensorAlgebra.instModuleFree -- should help with
 /-- An exterior algebra over a free module is itself a free module -/
-instance [Module.Free R M] : Module.Free R (ExteriorAlgebra R M) :=
-  sorry
-
+instance [Module.Free R M] : Module.Free R (ExteriorAlgebra R M) := by
+  let ⟨⟨κ, b⟩⟩ := Module.Free.exists_basis (R := R) (M := M)
+  let order : LinearOrder κ := sorry
+  let be := Basis.exteriorAlgebra b
+  exact Module.Free.of_basis be
 
 -- this might be false when `M` is not finite
 lemma ExteriorAlgebra.rank_eq [Module.Free R M] :
