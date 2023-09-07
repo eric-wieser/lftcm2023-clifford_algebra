@@ -60,8 +60,41 @@ set_option pp.proofs.withType false
 #check Model.single ℤ (1 : Fin 3) + (3:ℤ) • Model.single ℤ (2 : Fin 3)
 
 
-def mul_helper : Model.Index ι → Model.Index ι → Model.Index ι × SignType :=
-  sorry
+def merge_with_sign : SignType → List ι → List ι → List ι × SignType
+  | σ, [], l' => ⟨l',σ⟩
+  | σ, l, [] => ⟨l,σ⟩
+  | σ, a :: l, b :: l' =>
+    if a=b
+    then ⟨[],0⟩ -- the first entry will be ignored later anyway
+    else if a < b
+    then ⟨a :: (merge_with_sign σ l (b :: l')).1,σ⟩
+    else
+      let ⟨m,s⟩ := merge_with_sign σ (a :: l) l'
+      ⟨b :: m,s*(-1)^(List.length l +1)⟩
+  termination_by merge_with_sign s l₁ l₂ => List.length l₁ +  List.length l₂
+
+example : merge_with_sign 1 [1] [2] = ⟨[1,2],1⟩  := by
+  unfold merge_with_sign
+  simp
+
+example : merge_with_sign 1 [2] [1] = ⟨[1,2],-1⟩  := by
+  unfold merge_with_sign
+  simp
+
+example : merge_with_sign 1 [2] [2] = ⟨[],0⟩  := by
+  unfold merge_with_sign
+  simp
+
+example : merge_with_sign 1 [4] [1,2,3] = ⟨[1,2,3,4],-1⟩  := by
+  unfold merge_with_sign
+  simp
+
+/-
+def mul_helper : Model.Index ι → Model.Index ι → Model.Index ι × SignType := by
+  intro l k
+  unfold Model.Index at l k
+  let m : List ι := List.merge (· < ·) l k
+-/
 
 lemma single_mul_single_helper (i : ι) :
   (mul_helper ⟨[i], by simp⟩ ⟨[i], by simp⟩).2 = 0 := by
