@@ -170,3 +170,8 @@ def lift :
       invFun := liftInvFun
       left_inv := sorry
       right_inv := sorry
+
+@[simp]
+lemma liftToFun_composed_single (i : ι) (f : (ι →₀ R) →ₗ[R] A) (hf) :
+    liftToFun f hf (Model.single R i) = f (Finsupp.single i 1) := by
+  sorry
