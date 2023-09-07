@@ -55,6 +55,10 @@ def Model.Index.single (i : ι) : Model.Index ι := ⟨[i], by simp⟩
 def Model.single ( i : ι ) : Model R ι :=
   Model.ofFinsupp <| Finsupp.single (Model.Index.single i) 1
 
+@[simp]
+lemma Model.ofFinsupp_single_single ( i : ι ) :
+  Model.ofFinsupp (Finsupp.single (Model.Index.single i) 1) = Model.single R i := rfl
+
 set_option pp.proofs.withType false
 
 #check Model.single ℤ (1 : Fin 3) + (3:ℤ) • Model.single ℤ (2 : Fin 3)
