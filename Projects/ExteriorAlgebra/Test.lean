@@ -170,12 +170,17 @@ def liftToFun ( f : (ι →₀ R) →ₗ[R] A ) ( hf : ∀ m, f m * f m = 0 ) : 
 def liftInvFun (F : Model R ι →ₐ[R] A) : { f : (ι →₀ R) →ₗ[R] A // ∀ m, f m * f m = 0 } where
   val := {
     toFun := fun v => F (model_of_free_vsp v)
-    map_add' := sorry
-    map_smul' := sorry
+    map_add' := by
+      simp
+    map_smul' := by
+      simp
   }
   property := by
     intro m
-    sorry
+    simp
+    rw [← F.map_mul]
+    rw [two_vectors_square_zero]
+    simp
 
 
 -- @[simps! symm_apply]
