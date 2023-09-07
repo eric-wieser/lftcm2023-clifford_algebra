@@ -232,3 +232,13 @@ def lift :
 lemma liftToFun_composed_single (i : ι) (f : (ι →₀ R) →ₗ[R] A) (hf) :
     liftToFun f hf (Model.single R i) = f (Finsupp.single i 1) := by
   sorry
+
+
+@[ext high]
+theorem Model.hom_ext {f g : Model R ι →ₐ[R] A} :
+    f.toLinearMap.comp (model_of_free_vsp) = g.toLinearMap.comp (model_of_free_vsp) → f = g := by
+  sorry
+  -- intro h
+  -- apply (lift Q).symm.injective
+  -- rw [lift_symm_apply, lift_symm_apply]
+  -- simp only [h]

@@ -26,7 +26,7 @@ def ExteriorAlgebra.equivModel : ExteriorAlgebra R (ι →₀ R) ≃ₐ[R] ( Mod
   (by
     show_term ext
     dsimp
-    sorry
+    simp
   )
   (by
     show_term ext
