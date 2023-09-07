@@ -45,7 +45,6 @@ def ExteriorAlgebra.equivModel : ExteriorAlgebra R (ι →₀ R) ≃ₐ[R] ( Mod
     show_term ext
     dsimp
     simp
-    sorry
   )
 
 /-- When applied to a single basis vector, the result is a single element of the model.
