@@ -15,13 +15,6 @@ universe uι uR uM
 variable {ι : Type} [LinearOrder ι] {R : Type} {M : Type}
 variable [CommRing R] [AddCommGroup M] [Module R M]
 
-noncomputable def model_of_free_vsp : (ι →₀ R) →ₗ[R] Model R ι :=
-  Finsupp.lmapDomain R R (fun i ↦ Model.Index.single i)
-
-lemma two_vectors_square_zero (m: ι →₀ R) :
-  model_of_free_vsp m * model_of_free_vsp m = 0 := by
-  sorry
-
 set_option pp.proofs.withType false
 
 /-- Given a basis, we can consider our exterior algebra in terms of our model. The `sorry` here
@@ -31,15 +24,28 @@ def ExteriorAlgebra.equivModel : ExteriorAlgebra R (ι →₀ R) ≃ₐ[R] ( Mod
   (ExteriorAlgebra.lift _ ⟨model_of_free_vsp , two_vectors_square_zero⟩)
   (liftToFun (ExteriorAlgebra.ι _) ι_sq_zero)
   (by
-    ext
+    show_term ext
     dsimp
     sorry
   )
   (by
-    ext
+    show_term ext
     dsimp
-    sorry
+    simp
   )
+
+/-- When applied to a single basis vector, the result is a single element of the model.
+The first `sorry` here should be the `single` function of the basis. -/
+theorem ExteriorAlgebra.equivModel_ι_basis  (i : ι) :
+    ExteriorAlgebra.equivModel (ExteriorAlgebra.ι R (Finsupp.single i 1)) = Model.single R i :=
+  sorry
+
+
+/-- When applied to a single element of the model, the result is a single basis vector.
+The first `sorry` here should be the `single` function of the basis. -/
+theorem ExteriorAlgebra.equivModel_symm_single (i : ι) :
+    (ExteriorAlgebra.equivModel).symm (Model.single R i) = ExteriorAlgebra.ι R (Finsupp.single i 1) :=
+  sorry
 
 set_option maxHeartbeats 400000 in
 nonrec def Basis.ExteriorAlgebra.equivModel (b : Basis ι R M) : ExteriorAlgebra R M ≃ₐ[R] ( Model R ι ):=
@@ -51,18 +57,18 @@ nonrec def Basis.ExteriorAlgebra.equivModel (b : Basis ι R M) : ExteriorAlgebra
       rfl
   }) e
 
-/-- When applied to a single basis vector, the result is a single element of the model.
-The first `sorry` here should be the `single` function of the basis. -/
-theorem ExteriorAlgebra.equivModel_ι_basis (b : Basis ι R M) (i : ι) :
-    ExteriorAlgebra.equivModel b (ExteriorAlgebra.ι R (b i)) = Model.single R i :=
-  sorry
+-- /-- When applied to a single basis vector, the result is a single element of the model.
+-- The first `sorry` here should be the `single` function of the basis. -/
+-- theorem ExteriorAlgebra.equivModel_ι_basis (b : Basis ι R M) (i : ι) :
+--     ExteriorAlgebra.equivModel b (ExteriorAlgebra.ι R (b i)) = Model.single R i :=
+--   sorry
 
 
-/-- When applied to a single element of the model, the result is a single basis vector.
-The first `sorry` here should be the `single` function of the basis. -/
-theorem ExteriorAlgebra.equivModel_symm_single (b : Basis ι R M) (i : ι) :
-    (ExteriorAlgebra.equivModel b).symm (Model.single R i) = ExteriorAlgebra.ι R (b i) :=
-  sorry
+-- /-- When applied to a single element of the model, the result is a single basis vector.
+-- The first `sorry` here should be the `single` function of the basis. -/
+-- theorem ExteriorAlgebra.equivModel_symm_single (b : Basis ι R M) (i : ι) :
+--     (ExteriorAlgebra.equivModel b).symm (Model.single R i) = ExteriorAlgebra.ι R (b i) :=
+--   sorry
 
 /-- Given a basis on the module, produce a basis on the free algebra -/
 def Basis.exteriorAlgebra (b : Basis ι R M) :
@@ -81,9 +87,9 @@ instance [Module.Free R M] : Module.Free R (ExteriorAlgebra R M) := by
   exact Module.Free.of_basis be
 
 -- this might be false when `M` is not finite
-lemma ExteriorAlgebra.rank_eq [Module.Free R M] :
-    rank R (ExteriorAlgebra R M) = Cardinal.lift.{uR} (2 ^ rank R M) :=
-  sorry
+-- lemma ExteriorAlgebra.rank_eq [Module.Free R M] :
+--     rank R (ExteriorAlgebra R M) = Cardinal.lift.{uR} (2 ^ rank R M) :=
+--   sorry
 
 lemma ExteriorAlgebra.finrank_eq [Module.Free R M] [Module.Finite R M] :
     finrank R (ExteriorAlgebra R M) = 2 ^ finrank R M :=

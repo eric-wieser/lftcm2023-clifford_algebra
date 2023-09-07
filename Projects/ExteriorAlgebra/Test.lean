@@ -48,12 +48,16 @@ lemma Model.ofFinsupp_symm_one :
   -/
 
 variable { ι }
+
+@[simps]
+def Model.Index.single (i : ι) : Model.Index ι := ⟨[i], by simp⟩
+
 def Model.single ( i : ι ) : Model R ι :=
-  Model.ofFinsupp <| Finsupp.single {
-    val := [i]
-    property := by
-      simp
-  } 1
+  Model.ofFinsupp <| Finsupp.single (Model.Index.single i) 1
+
+@[simp]
+lemma Model.ofFinsupp_single_single ( i : ι ) :
+  Model.ofFinsupp (Finsupp.single (Model.Index.single i) 1) = Model.single R i := rfl
 
 set_option pp.proofs.withType false
 
@@ -97,7 +101,7 @@ def mul_helper : Model.Index ι → Model.Index ι → Model.Index ι × SignTyp
 -/
 
 lemma single_mul_single_helper (i : ι) :
-  (mul_helper ⟨[i], by simp⟩ ⟨[i], by simp⟩).2 = 0 := by
+  (mul_helper (Model.Index.single i) (Model.Index.single i)).2 = 0 := by
   sorry
 
 -- def list_sort_concat
@@ -159,6 +163,21 @@ lemma Model.ofFinsupp_symm_algebra_map :
   rfl
 
 
+noncomputable def model_of_free_vsp : (ι →₀ R) →ₗ[R] Model R ι :=
+  Model.ofFinsupp.toLinearMap ∘ₗ Finsupp.lmapDomain R R (fun i ↦ Model.Index.single i)
+
+@[simp]
+lemma model_of_free_vsp_single (i : ι) :
+    model_of_free_vsp (Finsupp.single i (1 : R)) = Model.single R i := by
+  unfold model_of_free_vsp
+  simp
+
+lemma two_vectors_square_zero (m: ι →₀ R) :
+  model_of_free_vsp m * model_of_free_vsp m = 0 := by
+  sorry
+
+
+
 variable {A : Type} [Ring A] [Algebra R A]
 variable {M : Type} [AddCommGroup M] [Module R M]
 
@@ -182,10 +201,19 @@ def liftToFun ( f : (ι →₀ R) →ₗ[R] A ) ( hf : ∀ m, f m * f m = 0 ) : 
     rw [@Algebra.algebraMap_eq_smul_one]
 
 def liftInvFun (F : Model R ι →ₐ[R] A) : { f : (ι →₀ R) →ₗ[R] A // ∀ m, f m * f m = 0 } where
-  val := sorry
+  val := {
+    toFun := fun v => F (model_of_free_vsp v)
+    map_add' := by
+      simp
+    map_smul' := by
+      simp
+  }
   property := by
     intro m
-    sorry
+    simp
+    rw [← F.map_mul]
+    rw [two_vectors_square_zero]
+    simp
 
 
 -- @[simps! symm_apply]
@@ -199,3 +227,8 @@ def lift :
       invFun := liftInvFun
       left_inv := sorry
       right_inv := sorry
+
+@[simp]
+lemma liftToFun_composed_single (i : ι) (f : (ι →₀ R) →ₗ[R] A) (hf) :
+    liftToFun f hf (Model.single R i) = f (Finsupp.single i 1) := by
+  sorry
