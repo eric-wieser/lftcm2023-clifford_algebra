@@ -41,6 +41,19 @@ def ExteriorAlgebra.equivModel : ExteriorAlgebra R (ι →₀ R) ≃ₐ[R] ( Mod
     sorry
   )
 
+/-- When applied to a single basis vector, the result is a single element of the model.
+The first `sorry` here should be the `single` function of the basis. -/
+theorem ExteriorAlgebra.equivModel_ι_basis  (i : ι) :
+    ExteriorAlgebra.equivModel (ExteriorAlgebra.ι R (Finsupp.single i 1)) = Model.single R i :=
+  sorry
+
+
+/-- When applied to a single element of the model, the result is a single basis vector.
+The first `sorry` here should be the `single` function of the basis. -/
+theorem ExteriorAlgebra.equivModel_symm_single (i : ι) :
+    (ExteriorAlgebra.equivModel).symm (Model.single R i) = ExteriorAlgebra.ι R (Finsupp.single i 1) :=
+  sorry
+
 set_option maxHeartbeats 400000 in
 nonrec def Basis.ExteriorAlgebra.equivModel (b : Basis ι R M) : ExteriorAlgebra R M ≃ₐ[R] ( Model R ι ):=
   let e := ExteriorAlgebra.equivModel (R := R) (ι := ι)
