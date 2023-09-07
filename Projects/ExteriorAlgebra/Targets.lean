@@ -64,18 +64,18 @@ nonrec def Basis.ExteriorAlgebra.equivModel (b : Basis ι R M) : ExteriorAlgebra
       rfl
   }) e
 
-/-- When applied to a single basis vector, the result is a single element of the model.
-The first `sorry` here should be the `single` function of the basis. -/
-theorem ExteriorAlgebra.equivModel_ι_basis (b : Basis ι R M) (i : ι) :
-    ExteriorAlgebra.equivModel b (ExteriorAlgebra.ι R (b i)) = Model.single R i :=
-  sorry
+-- /-- When applied to a single basis vector, the result is a single element of the model.
+-- The first `sorry` here should be the `single` function of the basis. -/
+-- theorem ExteriorAlgebra.equivModel_ι_basis (b : Basis ι R M) (i : ι) :
+--     ExteriorAlgebra.equivModel b (ExteriorAlgebra.ι R (b i)) = Model.single R i :=
+--   sorry
 
 
-/-- When applied to a single element of the model, the result is a single basis vector.
-The first `sorry` here should be the `single` function of the basis. -/
-theorem ExteriorAlgebra.equivModel_symm_single (b : Basis ι R M) (i : ι) :
-    (ExteriorAlgebra.equivModel b).symm (Model.single R i) = ExteriorAlgebra.ι R (b i) :=
-  sorry
+-- /-- When applied to a single element of the model, the result is a single basis vector.
+-- The first `sorry` here should be the `single` function of the basis. -/
+-- theorem ExteriorAlgebra.equivModel_symm_single (b : Basis ι R M) (i : ι) :
+--     (ExteriorAlgebra.equivModel b).symm (Model.single R i) = ExteriorAlgebra.ι R (b i) :=
+--   sorry
 
 /-- Given a basis on the module, produce a basis on the free algebra -/
 def Basis.exteriorAlgebra (b : Basis ι R M) :
@@ -94,9 +94,9 @@ instance [Module.Free R M] : Module.Free R (ExteriorAlgebra R M) := by
   exact Module.Free.of_basis be
 
 -- this might be false when `M` is not finite
-lemma ExteriorAlgebra.rank_eq [Module.Free R M] :
-    rank R (ExteriorAlgebra R M) = Cardinal.lift.{uR} (2 ^ rank R M) :=
-  sorry
+-- lemma ExteriorAlgebra.rank_eq [Module.Free R M] :
+--     rank R (ExteriorAlgebra R M) = Cardinal.lift.{uR} (2 ^ rank R M) :=
+--   sorry
 
 lemma ExteriorAlgebra.finrank_eq [Module.Free R M] [Module.Finite R M] :
     finrank R (ExteriorAlgebra R M) = 2 ^ finrank R M :=
