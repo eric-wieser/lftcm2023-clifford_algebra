@@ -93,12 +93,12 @@ example : merge_with_sign 1 [4] [1,2,3] = ⟨[1,2,3,4],-1⟩  := by
   unfold merge_with_sign
   simp
 
-/-
+
 def mul_helper : Model.Index ι → Model.Index ι → Model.Index ι × SignType := by
   intro l k
-  unfold Model.Index at l k
-  let m : List ι := List.merge (· < ·) l k
--/
+  let ms := merge_with_sign 1 l.1 k.1
+  refine (⟨ms.1,?_⟩,ms.2)
+  sorry
 
 lemma single_mul_single_helper (i : ι) :
   (mul_helper (Model.Index.single i) (Model.Index.single i)).2 = 0 := by
