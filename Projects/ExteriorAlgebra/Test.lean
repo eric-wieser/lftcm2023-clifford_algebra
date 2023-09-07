@@ -130,6 +130,21 @@ lemma Model.ofFinsupp_symm_algebra_map :
   rfl
 
 
+noncomputable def model_of_free_vsp : (ι →₀ R) →ₗ[R] Model R ι :=
+  Model.ofFinsupp.toLinearMap ∘ₗ Finsupp.lmapDomain R R (fun i ↦ Model.Index.single i)
+
+@[simp]
+lemma model_of_free_vsp_single (i : ι) :
+    model_of_free_vsp (Finsupp.single i (1 : R)) = Model.single R i := by
+  unfold model_of_free_vsp
+  simp
+
+lemma two_vectors_square_zero (m: ι →₀ R) :
+  model_of_free_vsp m * model_of_free_vsp m = 0 := by
+  sorry
+
+
+
 variable {A : Type} [Ring A] [Algebra R A]
 variable {M : Type} [AddCommGroup M] [Module R M]
 
@@ -153,7 +168,11 @@ def liftToFun ( f : (ι →₀ R) →ₗ[R] A ) ( hf : ∀ m, f m * f m = 0 ) : 
     rw [@Algebra.algebraMap_eq_smul_one]
 
 def liftInvFun (F : Model R ι →ₐ[R] A) : { f : (ι →₀ R) →ₗ[R] A // ∀ m, f m * f m = 0 } where
-  val := sorry
+  val := {
+    toFun := fun v => F (model_of_free_vsp v)
+    map_add' := sorry
+    map_smul' := sorry
+  }
   property := by
     intro m
     sorry

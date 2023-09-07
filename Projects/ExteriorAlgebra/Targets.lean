@@ -15,19 +15,6 @@ universe uι uR uM
 variable {ι : Type} [LinearOrder ι] {R : Type} {M : Type}
 variable [CommRing R] [AddCommGroup M] [Module R M]
 
-noncomputable def model_of_free_vsp : (ι →₀ R) →ₗ[R] Model R ι :=
-  Model.ofFinsupp.toLinearMap ∘ₗ Finsupp.lmapDomain R R (fun i ↦ Model.Index.single i)
-
-@[simp]
-lemma model_of_free_vsp_single (i : ι) :
-    model_of_free_vsp (Finsupp.single i (1 : R)) = Model.single R i := by
-  unfold model_of_free_vsp
-  simp
-
-lemma two_vectors_square_zero (m: ι →₀ R) :
-  model_of_free_vsp m * model_of_free_vsp m = 0 := by
-  sorry
-
 set_option pp.proofs.withType false
 
 /-- Given a basis, we can consider our exterior algebra in terms of our model. The `sorry` here
