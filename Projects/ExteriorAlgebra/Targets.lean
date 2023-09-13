@@ -82,7 +82,30 @@ def Basis.exteriorAlgebra (b : Basis ι R M) :
 /-- An exterior algebra over a free module is itself a free module -/
 instance [Module.Free R M] : Module.Free R (ExteriorAlgebra R M) := by
   let ⟨⟨κ, b⟩⟩ := Module.Free.exists_basis (R := R) (M := M)
-  let order : LinearOrder κ := sorry
+  let order : LinearOrder κ := {
+    le := embeddingToCardinal ⁻¹'o (· ≤ ·)
+    --the previous line is similar to the definition of WellOrderingRel
+    le_refl := by
+      simp only [Order.Preimage]
+      intro a
+      simp only [le_refl]
+    le_trans := by
+      simp only [Order.Preimage]
+      exact fun a b c a_1 a_2 ↦ le_trans a_1 a_2
+    le_antisymm := by
+      simp only [Order.Preimage]
+      intro a b h1 h2
+      have h: embeddingToCardinal a = embeddingToCardinal b := by
+        apply le_antisymm_iff.mpr ⟨h1,h2⟩
+      rw [@Function.Embedding.apply_eq_iff_eq] at h
+      assumption
+    le_total := by
+      simp only [Order.Preimage]
+      exact fun a b ↦ le_total (embeddingToCardinal a) (embeddingToCardinal b)
+    decidableLE := by
+      simp only [Order.Preimage]
+      exact Classical.decRel fun x y ↦ embeddingToCardinal x ≤ embeddingToCardinal y
+  }
   let be := Basis.exteriorAlgebra b
   exact Module.Free.of_basis be
 
